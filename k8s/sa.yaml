@@ -1,0 +1,8 @@
+apiVersion: v1
+automountServiceAccountToken: true
+kind: ServiceAccount
+metadata:
+  annotations:
+    eks.amazonaws.com/role-arn: arn:aws:iam::779569392134:role/apps-779569392134-ekscluster00-sfs-iam-role
+  name: sfs-sa
+  namespace: jenkins

@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: aws-cli
+  namespace: jenkins
+spec:
+  serviceAccountName: sfs-sa
+  containers:
+  - name: aws-cli
+    # image: amazon/aws-cli:latest
+    image: 437291019013.dkr.ecr.eu-central-1.amazonaws.com/infra/toolbox:python3.9.18-aws-cli
+    command:
+      - sleep
+      - "3600"
+    imagePullPolicy: IfNotPresent
+  restartPolicy: Always
