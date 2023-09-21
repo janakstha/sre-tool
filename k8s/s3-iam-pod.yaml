@@ -1,3 +1,4 @@
+# https://repost.aws/knowledge-center/eks-restrict-s3-bucket
 apiVersion: v1
 kind: Pod
 metadata:
