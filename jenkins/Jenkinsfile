@@ -1,0 +1,19 @@
+podTemplate(
+        name: 'test',
+        serviceAccount: 'sfs-sa',
+        containers: [
+                containerTemplate(name: 'aws-cli', image: '437291019013.dkr.ecr.eu-central-1.amazonaws.com/infra/toolbox:python3.9.18-aws-cli', command: 'cat', ttyEnabled: true,
+                        envVars: [
+                                envVar(key: 'SPRING_PROFILES_ACTIVE', value: 'int')
+                        ])
+        ]
+) {
+    node(POD_LABEL) {
+        container ('aws-cli'){
+            stage('printAwsSecrets') {
+                sh "python /home/app/aws-secrets-manager.py"
+                // sh "sleep 600"
+            }
+        }
+    }
+}
