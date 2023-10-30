@@ -15,10 +15,3 @@ spec:
   containers:
     - name: with-node-affinity
       image: registry.k8s.io/pause:2.0
-      resources:
-        limits:
-          cpu: 64m
-          memory: 64Mi
-        requests:
-          cpu: 64m
-          memory: 64Mi
