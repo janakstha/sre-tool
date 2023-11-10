@@ -42,7 +42,7 @@ spec:
 #    - type: Resource
 #      resource:
 #        name: cpu
-#        targetAverageUtilization: 80
+#        targetAverageUtilization: 90
 #---
 #apiVersion: autoscaling/v1
 #kind: HorizontalPodAutoscaler
