@@ -16,7 +16,7 @@ spec:
         name: cpu
         target:
           type: Utilization
-          averageUtilization: 70
+          averageUtilization: 80
 
 #apiVersion: autoscaling/v1
 #kind: HorizontalPodAutoscaler
@@ -65,3 +65,11 @@ spec:
 #    kind: Deployment
 #    name: credit-card-pmp
 #  targetCPUUtilizationPercentage: 50
+
+---
+# Create a load for the web server by running a container.
+# kubectl run -i \
+# --tty load-generator \
+# --rm --image=busybox \
+# --restart=Never \
+# -- /bin/sh -c "while sleep 0.01; do wget -q -O- http://php-apache; done"
