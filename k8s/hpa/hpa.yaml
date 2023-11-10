@@ -1,0 +1,67 @@
+# Source: credit-card-pmp/templates/hpa.yaml
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: php-apache
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: php-apache
+  minReplicas: 1
+  maxReplicas: 10
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 50
+
+#apiVersion: autoscaling/v1
+#kind: HorizontalPodAutoscaler
+#metadata:
+#  name: credit-card-pmp
+#  namespace: p3-acceptance
+#  labels:
+#    helm.sh/chart: credit-card-pmp-2.25.0
+#    admission.datadoghq.com/enabled: "true"
+#    app.kubernetes.io/name: credit-card-pmp
+#    app.kubernetes.io/instance: credit-card-pmp
+#    ccpmp.unzer.com/instance: "default"
+#    app.kubernetes.io/version: "2.25.0"
+#    app.kubernetes.io/managed-by: Helm
+#spec:
+#  scaleTargetRef:
+#    apiVersion: apps/v1
+#    kind: Deployment
+#    name: credit-card-pmp
+#  minReplicas: 1
+#  maxReplicas: 5
+#  metrics:
+#    - type: Resource
+#      resource:
+#        name: cpu
+#        targetAverageUtilization: 80
+#---
+#apiVersion: autoscaling/v1
+#kind: HorizontalPodAutoscaler
+#metadata:
+#  name: credit-card-pmp
+#  namespace: p3-acceptance
+#  labels:
+#    helm.sh/chart: credit-card-pmp-2.25.0
+#    admission.datadoghq.com/enabled: "true"
+#    app.kubernetes.io/name: credit-card-pmp
+#    app.kubernetes.io/instance: credit-card-pmp
+#    ccpmp.unzer.com/instance: "default"
+#    app.kubernetes.io/version: "2.25.0"
+#    app.kubernetes.io/managed-by: Helm
+#spec:
+#  maxReplicas: 10
+#  minReplicas: 2
+#  scaleTargetRef:
+#    apiVersion: apps/v1
+#    kind: Deployment
+#    name: credit-card-pmp
+#  targetCPUUtilizationPercentage: 50

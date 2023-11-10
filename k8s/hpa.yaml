@@ -1,0 +1,50 @@
+# Source: p3-klarna-pmp/templates/hpa.yaml
+apiVersion: autoscaling/v2beta1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: p3-klarna-pmp
+  namespace: klarna-pmp
+  labels:
+    helm.sh/chart: p3-klarna-pmp-0.21.0
+    app.kubernetes.io/name: p3-klarna-pmp
+    app.kubernetes.io/instance: p3-klarna-pmp
+    app.kubernetes.io/version: "0.21.0"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: p3-klarna-pmp
+  minReplicas: 1
+  maxReplicas: 5
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        AverageUtilization: 80
+---
+# Source: credit-card-pmp/templates/hpa.yaml
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: release-name-credit-card-pmp
+  labels:
+    helm.sh/chart: credit-card-pmp-2.25.0
+    admission.datadoghq.com/enabled: "true"
+    app.kubernetes.io/name: credit-card-pmp
+    app.kubernetes.io/instance: release-name
+    ccpmp.unzer.com/instance: "default"
+    app.kubernetes.io/version: "2.25.0"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: release-name-credit-card-pmp
+  minReplicas: 1
+  maxReplicas: 5
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        targetAverageUtilization: 80
