@@ -1,0 +1,2 @@
+# Network policy demo is based on https://docs.aws.amazon.com/eks/latest/userguide/cni-network-policy.html
+# This whole k8s files can be used for functionality testing of Network Policy

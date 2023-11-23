@@ -11,7 +11,7 @@ metadata:
   name: management-ui 
   namespace: management-ui 
 spec:
-  type: LoadBalancer
+  type: ClusterIP
   ports:
   - port: 80 
     targetPort: 9001
