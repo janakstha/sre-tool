@@ -7,7 +7,7 @@ metadata:
 spec:
   # do not include replicas in the manifests if you want replicas to be controlled by HPA
   # replicas: 1
-  replicas: 1
+  # replicas: 1
   selector:
     matchLabels:
       run: php-apache
@@ -16,6 +16,19 @@ spec:
       labels:
         run: php-apache
     spec:
+      tolerations:
+        - key: "map-migrated-mng"
+          operator: "Exists"
+          effect: "NoSchedule"
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: eks.amazonaws.com/capacityType
+                    operator: In
+                    values:
+                      - ON_DEMAND
       containers:
       - name: php-apache
         image: registry.k8s.io/hpa-example

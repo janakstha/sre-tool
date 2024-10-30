@@ -1,0 +1,28 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: p3-modirum-mpi
+  namespace: cards
+  annotations:
+    external-dns.alpha.kubernetes.io/hostname: modirum.test.upcgw.local
+    service.beta.kubernetes.io/aws-load-balancer-nlb-target-type: ip
+    service.beta.kubernetes.io/aws-load-balancer-additional-resource-tags: Team=Platform Engineering,LegalEntity=Unzer GmbH,Project=Infra,CostCenter=109201077,Env=test
+spec:
+  type: LoadBalancer
+  loadBalancerClass: service.k8s.aws/nlb
+  selector:
+    app.kubernetes.io/instance: p3-modirum-mpi
+    app.kubernetes.io/name: p3-modirum-mpi
+  ports:
+    - name: app-port
+      port: 80
+      protocol: TCP
+      targetPort: 9000
+    - name: ac-port
+      port: 9001
+      protocol: TCP
+      targetPort: 9001
+    - name: trust-port
+      port: 443
+      protocol: TCP
+      targetPort: 9010

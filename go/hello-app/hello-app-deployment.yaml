@@ -1,0 +1,79 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hello-app-deployment
+  namespace: default
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: hello-app
+  template:
+    metadata:
+      labels:
+        app: hello-app
+    spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: eks.amazonaws.com/nodegroup
+                    operator: In
+                    values:
+                      - mngn-default-2024092509341828670000000d
+      tolerations:
+        - key: "dedicated"
+          operator: "Equal"
+          value: "gpuGroup"
+          effect: "NoSchedule"
+      containers:
+        - name: hello-app
+          image: 437291019013.dkr.ecr.eu-central-1.amazonaws.com/infra/toolbox:hello-app-1.0
+          ports:
+            - containerPort: 9000
+              name: http-web-svc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: hello-app-service
+  namespace: default
+spec:
+  selector:
+    app: hello-app
+  ports:
+    - protocol: TCP
+      name: http
+      port: 80
+      targetPort: http-web-svc
+  type: ClusterIP
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:eu-central-1:437291019013:certificate/2e2c0a0c-3c39-4129-92ec-7600ef13776c
+    alb.ingress.kubernetes.io/group.name: unzer-hello-app
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS":443}]'
+    alb.ingress.kubernetes.io/load-balancer-attributes: idle_timeout.timeout_seconds=600
+    alb.ingress.kubernetes.io/load-balancer-name: unzer-hello-app
+    alb.ingress.kubernetes.io/scheme: internal
+    alb.ingress.kubernetes.io/ssl-redirect: '443'
+    alb.ingress.kubernetes.io/target-type: ip
+    alb.ingress.kubernetes.io/tags: Team=Platform Engineering,LegalEntity=Unzer GmbH,Project=Infra,CostCenter=109201088,Env=core
+  name: unzer-hello-app
+  namespace: default
+spec:
+  ingressClassName: alb
+  rules:
+    - host: hello-app.infra.unzer.io
+      http:
+        paths:
+          - backend:
+              service:
+                name: hello-app-service
+                port:
+                  number: 80
+            path: /
+            pathType: Prefix

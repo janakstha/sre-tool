@@ -1,0 +1,62 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx
+spec:
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+          - matchExpressions:
+              - key: cloud.google.com/gke-nodepool
+                operator: In
+                values:
+                  - test-pool-sa
+  containers:
+    - name: hello-app
+      image: europe-west3-docker.pkg.dev/unzer-gcp-shared-core/tillhub-dashboard/hello-app:1.0
+      imagePullPolicy: IfNotPresent
+#--
+#piVersion: apps/v1
+#ind: Deployment
+#etadata:
+# name: with-node-affinity-deployment
+# namespace: default
+#pec:
+# progressDeadlineSeconds: 600
+# replicas: 1
+# revisionHistoryLimit: 10
+# selector:
+#   matchLabels:
+#     app: with-node-affinity
+# strategy:
+#   rollingUpdate:
+#     maxSurge: 25%
+#     maxUnavailable: 25%
+#   type: RollingUpdate
+# template:
+#   metadata:
+#     creationTimestamp: null
+#     labels:
+#       app: with-node-affinity
+#   spec:
+#     affinity:
+#       nodeAffinity:
+#         requiredDuringSchedulingIgnoredDuringExecution:
+#           nodeSelectorTerms:
+#             - matchExpressions:
+#                 - key: node.kubernetes.io/lifecycle
+#                   operator: In
+#                   values:
+#                     - normal
+#     containers:
+#       - image: registry.k8s.io/pause:2.0
+#         imagePullPolicy: IfNotPresent
+#         name: with-node-affinity
+#         resources:
+#           limits:
+#             cpu: 100m
+#             memory: 1G
+#           requests:
+#             cpu: 100m
+#             memory: 1G

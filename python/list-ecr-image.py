@@ -1,5 +1,5 @@
 #!/usr/bin/env python3.9
-
+# kubectl get pods --all-namespaces -o jsonpath="{range .items[*]}{range .spec.initContainers[*]}{.image}{'\n'}{end}{range .spec.containers[*]}{.image}{'\n'}{end}{end}" | sort | uniq
 import boto3
 
 def check_ecr_images(input_file):

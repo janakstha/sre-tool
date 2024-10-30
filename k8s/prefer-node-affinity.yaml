@@ -1,37 +1,42 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: with-node-affinity-deployment
-  namespace: actions-runner-system
+  name: with-node-affinity-deployment-cicd
+  namespace: default
 spec:
-  replicas: 12
+  replicas: 1
   selector:
     matchLabels:
-      app: with-node-affinity
+      app: with-node-affinity-cicd
   template:
     metadata:
       labels:
-        app: with-node-affinity
+        app: with-node-affinity-cicd
     spec:
       affinity:
         nodeAffinity:
-          preferredDuringSchedulingIgnoredDuringExecution:
-            - weight: 1
-              preference:
-                matchExpressions:
-                  - key: app
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: eks.amazonaws.com/nodegroup
                     operator: In
                     values:
-                      - jenkins
+                      - mngn-default-2024092509341828670000000d
       tolerations:
-        - key: "worker-group"
+        - key: "dedicated"
           operator: "Equal"
-          value: "cicd"
+          value: "gpuGroup"
           effect: "NoSchedule"
       containers:
         - name: with-node-affinity
-          image: registry.k8s.io/pause:2.0
-
+          image: 437291019013.dkr.ecr.eu-central-1.amazonaws.com/infra/toolbox:python3.9.18-aws-cli # registry.k8s.io/pause:2.0
+          resources:
+            requests:
+              memory: "4G"
+              cpu: "3"
+            limits:
+              memory: "4G"
+              cpu: "3"
 ---
 #apiVersion: v1
 #kind: Pod

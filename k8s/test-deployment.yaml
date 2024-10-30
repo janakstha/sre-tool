@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: appname-1
+  namespace: default
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: appname
+  template:
+    metadata:
+      labels:
+        app: appname
+    spec:
+      containers:
+      - name: appname
+        image: 437291019013.dkr.ecr.eu-central-1.amazonaws.com/infra/toolbox:testssl
+        #image: registry.k8s.io/pause:2.0
+        command:
+          - sleep
+          - "3600"
+        resources:
+          requests:
+            memory: "0.2G"
+            cpu: "6"
+          limits:
+            memory: "0.2G"
+            cpu: "6"

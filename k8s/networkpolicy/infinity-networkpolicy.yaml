@@ -1,0 +1,87 @@
+#apiVersion: networking.k8s.io/v1
+#kind: NetworkPolicy
+#metadata:
+#  name: infinity-network-policy
+#  namespace: infinity
+#spec:
+#  podSelector:
+#    matchLabels: {}
+#  policyTypes:
+#    - Ingress
+#    - Egress
+#  ingress:
+#    - from:
+#        - podSelector: {}
+#        - namespaceSelector:
+#            matchLabels:
+#              name: infinity
+#        - ipBlock:
+#            cidr: 10.24.87.194/32 # 10.24.64.0/19 # ip block of eks vpc that alb take ip # 172.20.0.0/16 service ip range for eks
+#        - ipBlock:
+#            cidr: 10.24.76.143/32
+#        - ipBlock:
+#            cidr: 10.24.83.210/32
+#
+#  egress:
+#    - {}
+# ---
+#apiVersion: networking.k8s.io/v1
+#kind: NetworkPolicy
+#metadata:
+#  name: test-network-policy
+#  namespace: default
+#spec:
+#  podSelector:
+#    matchLabels:
+#      role: db
+#  policyTypes:
+#    - Ingress
+#    - Egress
+#  ingress:
+#    - from:
+#        - ipBlock:
+#            cidr: 172.17.0.0/16
+#            except:
+#              - 172.17.1.0/24
+#        - namespaceSelector:
+#            matchLabels:
+#              project: myproject
+#        - podSelector:
+#            matchLabels:
+#              role: frontend
+#      ports:
+#        - protocol: TCP
+#          port: 6379
+#  egress:
+#    - to:
+#        - ipBlock:
+#            cidr: 10.0.0.0/24
+#      ports:
+#        - protocol: TCP
+#          port: 5978
+#
+#
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: infinity-network-policy
+  namespace: infinity
+spec:
+  podSelector: {} # Selects all pods in the namespace
+  policyTypes:
+    - Ingress
+    - Egress
+  ingress:
+    - from:
+        - podSelector: {} # Allows traffic from all pods within the same namespace
+        - ipBlock:
+            cidr: 10.31.0.0/18
+        - ipBlock:
+            cidr: 10.17.31.0/24
+        - ipBlock:
+            cidr: 10.24.64.0/19
+  egress:
+    - to:
+        - ipBlock:
+            cidr: 0.0.0.0/0 # Allows traffic to the internet
